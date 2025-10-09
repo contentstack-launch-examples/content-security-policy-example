@@ -22,7 +22,7 @@ export default function Home() {
         />
         {/* Cloudflare email protection script - this will be blocked by CSP */}
         <script
-          src="https://cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
+          src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
           async
         />
         {/* Simulate Cloudflare email protection being enabled */}
@@ -55,28 +55,26 @@ export default function Home() {
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
           <div className="text-center sm:text-left">
             <h1 className="text-4xl font-bold mb-4">
-              CSP + Cloudflare Email Protection Issue
+              CSP + Cloudflare Email Protection - Hash Solution Test
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-              This page reproduces the CSP console error when using
-              Cloudflare&apos;s email protection (enabled feature) with
-              nonce-based CSP and strict-dynamic directive.
+              Testing the hash-based CSP solution to allow Cloudflare&apos;s
+              email protection script while maintaining strict-dynamic security.
             </p>
           </div>
 
           <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-600 rounded-lg p-4 mb-8">
             <h2 className="text-lg font-semibold mb-2">Expected Behavior:</h2>
             <p className="text-sm">
-              The browser will block Cloudflare&apos;s email protection script
-              due to the strict CSP policy with nonce-based restrictions. This
-              will cause the protected email links to be broken because the
-              decoding script cannot load.
+              With the hash-based CSP solution, Cloudflare&apos;s email
+              protection script should now be allowed while maintaining
+              strict-dynamic security. The email links should work properly.
             </p>
           </div>
 
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold">
-              Protected Email Links (Will be broken due to CSP):
+              Protected Email Links (Should work with hash-based CSP):
             </h2>
 
             {/* These mailto links are protected by Cloudflare but broken due to CSP */}
@@ -111,10 +109,10 @@ export default function Home() {
             <h3 className="text-lg font-semibold mb-2">
               Check Browser Console:
             </h3>
-            <p className="text-sm">
+            <p className="text-sm mb-4">
               Open your browser&apos;s Developer Tools (F12) and check the
-              Console tab. You should see a real CSP error message from the
-              browser blocking the Cloudflare script.
+              Console tab. With the hash-based CSP solution, you should NOT see
+              CSP errors blocking the Cloudflare script.
             </p>
           </div>
         </main>
@@ -122,7 +120,7 @@ export default function Home() {
         <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
           <div className="text-center">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              CSP Issue Reproduction - Check browser console for errors
+              Hash-based CSP Solution Test - Check browser console for results
             </p>
           </div>
         </footer>

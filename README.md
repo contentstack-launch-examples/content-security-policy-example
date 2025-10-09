@@ -1,6 +1,6 @@
-# CSP + Cloudflare Email Protection Issue Reproduction
+# CSP + Cloudflare Email Protection - Hash Solution Test
 
-This Next.js project reproduces the Content Security Policy (CSP) issue with Cloudflare's email protection feature, as described in the support query.
+This Next.js project tests the hash-based CSP solution for Cloudflare's email protection feature, as described in the support query.
 
 ## Issue Description
 
@@ -32,26 +32,20 @@ npm run dev
 
 When you open the page, you should see:
 
-1. **CSP Console Error**: The browser will automatically generate a CSP error in the console when it blocks the Cloudflare script. The error will look similar to:
+1. **No CSP Errors**: With the hash-based CSP solution, the browser should NOT generate CSP errors blocking the Cloudflare script.
 
-   ```
-   Refused to load the script 'https://cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js'
-   because it violates the following Content Security Policy directive: "script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-...'".
-   Note that 'strict-dynamic' is present, so host-based allowlisting is disabled.
-   ```
-
-2. **Broken Email Links**: The mailto links on the page will not work properly because Cloudflare's email protection script is blocked.
+2. **Working Email Links**: The mailto links on the page should work properly because Cloudflare's email protection script is now allowed by the hash-based CSP.
 
 ## Technical Implementation
 
 ### CSP Headers
 
-The custom server (`server.js`) sets strict CSP headers matching the exact configuration from the support query:
+The Next.js configuration (`next.config.ts`) sets CSP headers with hash-based allowlist:
 
-- Uses `script-src-elem` directive with `'unsafe-inline'`, `'strict-dynamic'`, `https:`, `http:`, `'unsafe-eval'`, and nonce
+- Uses `script-src-elem` directive with `'unsafe-inline'`, `'strict-dynamic'`, `https:`, `http:`, `'unsafe-eval'`, nonce, and hash
 - Includes both `script-src-elem` and `script-src` directives
-- The `strict-dynamic` directive disables host-based allowlisting
-- Blocks external scripts that don't have the correct nonce
+- The `strict-dynamic` directive is maintained for security
+- Allows specific Cloudflare script via SHA-256 hash
 
 ### Cloudflare Email Protection
 

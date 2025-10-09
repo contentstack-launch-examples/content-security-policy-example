@@ -1,5 +1,5 @@
-// Launch Edge Function - functions/email-protection.edge.js
-export default async function handler(request) {
+// Contentstack Launch API Route - src/pages/api/emailprotection.js
+export default function handler(req, res) {
   try {
     // Use a simple nonce for testing
     const nonce = "test123";
@@ -7,7 +7,7 @@ export default async function handler(request) {
     // Return JavaScript content that simulates Cloudflare email protection
     const scriptContent = `
       // Simulate Cloudflare email protection script
-      console.log('Edge function loaded with nonce:', '${nonce}');
+      console.log('Launch API route loaded with nonce:', '${nonce}');
       window.CF_EMAIL_PROTECTION_NONCE = "${nonce}";
       
       // Simulate email protection functionality
@@ -19,7 +19,7 @@ export default async function handler(request) {
       
       // Initialize email protection
       document.addEventListener('DOMContentLoaded', function() {
-        console.log('Cloudflare email protection initialized');
+        console.log('Cloudflare email protection initialized via Launch API');
         const mailtoLinks = document.querySelectorAll('a[href*="email-protection"]');
         mailtoLinks.forEach(function(link) {
           console.log('Found protected email link:', link.href);
@@ -27,22 +27,14 @@ export default async function handler(request) {
       });
     `;
 
-    return new Response(scriptContent, {
-      headers: {
-        "Content-Type": "application/javascript",
-        "Cache-Control": "public, max-age=3600",
-        "Access-Control-Allow-Origin": "*",
-        "X-Content-Type-Options": "nosniff",
-      },
-    });
+    res.setHeader("Content-Type", "application/javascript");
+    res.setHeader("Cache-Control", "public, max-age=3600");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+
+    res.status(200).send(scriptContent);
   } catch (error) {
-    console.error("Edge function error:", error);
-    return new Response("// Error loading email protection script", {
-      status: 500,
-      headers: {
-        "Content-Type": "application/javascript",
-        "X-Content-Type-Options": "nosniff",
-      },
-    });
+    console.error("Launch API route error:", error);
+    res.status(500).send("// Error loading email protection script");
   }
 }

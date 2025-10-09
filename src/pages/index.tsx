@@ -18,11 +18,11 @@ export default function Home() {
         <title>CSP + Cloudflare Email Protection</title>
         <meta
           name="description"
-          content="Using Launch edge function to provide nonce to Cloudflare's email protection"
+          content="Using Launch API route to provide nonce to Cloudflare's email protection"
         />
 
-        {/* Load Cloudflare email protection script via Edge Function */}
-        <script src="/functions/email-protection" async nonce="test123" />
+        {/* Load Cloudflare email protection script via Launch API Route */}
+        <script src="/api/emailprotection" async nonce="test123" />
 
         {/* Debug script to verify everything is working */}
         <script

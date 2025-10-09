@@ -81,9 +81,9 @@ When deployed, you should see:
 
 - **Security**: Maintains strict CSP with `strict-dynamic`
 - **Functionality**: Email protection works as expected
-- **Performance**: Edge function provides fast script delivery
+- **Performance**: API route provides fast script delivery
 - **Maintainability**: Clean, well-documented solution
-- **Scalability**: Works with Launch's edge infrastructure
+- **Scalability**: Works with Launch's serverless infrastructure
 
 ## Customer Requirements Met
 

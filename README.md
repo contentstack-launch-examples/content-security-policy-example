@@ -1,6 +1,6 @@
-# CSP + Cloudflare Email Protection - Hash Solution Test
+# CSP + Cloudflare Email Protection - Launch Edge Function Solution
 
-This Next.js project tests the hash-based CSP solution for Cloudflare's email protection feature, as described in the support query.
+This Next.js project implements a Launch edge function solution for Cloudflare's email protection feature with strict-dynamic CSP, as described in the support query.
 
 ## Issue Description
 
@@ -32,27 +32,27 @@ npm run dev
 
 When you open the page, you should see:
 
-1. **No CSP Errors**: With the hash-based CSP solution, the browser should NOT generate CSP errors blocking the Cloudflare script.
+1. **No CSP Errors**: With the Launch edge function solution, the browser should NOT generate CSP errors blocking the Cloudflare script.
 
-2. **Working Email Links**: The mailto links on the page should work properly because Cloudflare's email protection script is now allowed by the hash-based CSP.
+2. **Working Email Links**: The mailto links on the page should work properly because Cloudflare's email protection script is now proxied through our edge function with proper nonce.
 
 ## Technical Implementation
 
 ### CSP Headers
 
-The Next.js configuration (`next.config.ts`) sets CSP headers with hash-based allowlist:
+The Next.js configuration (`next.config.ts`) sets CSP headers with strict-dynamic:
 
-- Uses `script-src-elem` directive with `'unsafe-inline'`, `'strict-dynamic'`, `https:`, `http:`, `'unsafe-eval'`, nonce, and hash
+- Uses `script-src-elem` directive with `'unsafe-inline'`, `'strict-dynamic'`, `https:`, `http:`, `'unsafe-eval'`, and nonce
 - Includes both `script-src-elem` and `script-src` directives
-- The `strict-dynamic` directive is maintained for security
-- Allows specific Cloudflare script via SHA-256 hash
+- The `strict-dynamic` directive is maintained for security (as required by customer)
+- Scripts are served through Launch edge function with proper nonce
 
-### Cloudflare Email Protection
+### Launch Edge Function Solution
 
-- Includes Cloudflare's email protection script in the page head (simulating enabled feature)
-- Creates multiple protected email links using Cloudflare's `/cdn-cgi/l/email-protection` format
-- Includes `data-cfemail` attributes for email decoding
-- The script fails to load due to CSP restrictions, breaking the email links
+- **Edge Function**: `functions/[proxy].edge.js` proxies the Cloudflare email protection script
+- **Script Source**: Changed from direct Cloudflare URL to `/functions/proxy`
+- **Nonce Support**: Edge function serves script with proper nonce for CSP compliance
+- **Maintains Security**: Keeps `strict-dynamic` while allowing the script to load
 
 ## Files Modified
 

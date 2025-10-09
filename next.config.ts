@@ -12,8 +12,8 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               `default-src 'self'`,
-              `script-src-elem 'unsafe-inline' https: http: 'unsafe-eval' 'nonce-test123' 'self'`,
-              `script-src 'self' 'unsafe-inline' https: http: 'unsafe-eval' 'nonce-test123'`,
+              `script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-test123'`,
+              `script-src 'self' 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-test123'`,
               `style-src 'self' 'unsafe-inline'`,
               `img-src 'self' data: https:`,
               `font-src 'self'`,

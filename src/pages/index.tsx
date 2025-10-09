@@ -20,11 +20,8 @@ export default function Home() {
           name="description"
           content="Reproducing CSP issue with Cloudflare email protection"
         />
-        {/* Cloudflare email protection script - this will be blocked by CSP */}
-        <script
-          src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
-          async
-        />
+        {/* Cloudflare email protection script - proxied through Launch edge function */}
+        <script src="/functions/proxy" async nonce="test123" />
         {/* Simulate Cloudflare email protection being enabled */}
         <script
           nonce="test123"
@@ -59,27 +56,27 @@ export default function Home() {
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
           <div className="text-center sm:text-left">
             <h1 className="text-4xl font-bold mb-4">
-              CSP + Cloudflare Email Protection - Solution Test
+              CSP + Cloudflare Email Protection - Edge Function Solution
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-              Testing CSP solution to allow Cloudflare&apos;s email protection
-              script. Currently testing without strict-dynamic to isolate the
-              issue.
+              Testing edge function solution to proxy Cloudflare&apos;s email
+              protection script while maintaining strict-dynamic CSP security.
             </p>
           </div>
 
           <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-600 rounded-lg p-4 mb-8">
             <h2 className="text-lg font-semibold mb-2">Expected Behavior:</h2>
             <p className="text-sm">
-              Without strict-dynamic, the Cloudflare email protection script
-              should now be allowed via the &apos;self&apos; directive. The
-              email links should work properly.
+              With the Launch edge function solution, the Cloudflare email
+              protection script is proxied through our edge function with proper
+              nonce. This maintains strict-dynamic security while allowing the
+              script to load from our own domain.
             </p>
           </div>
 
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold">
-              Protected Email Links (Should work without strict-dynamic):
+              Protected Email Links (Should work with edge function solution):
             </h2>
 
             {/* These mailto links are protected by Cloudflare but broken due to CSP */}
@@ -116,8 +113,8 @@ export default function Home() {
             </h3>
             <p className="text-sm mb-4">
               Open your browser&apos;s Developer Tools (F12) and check the
-              Console tab. With the hash-based CSP solution, you should NOT see
-              CSP errors blocking the Cloudflare script.
+              Console tab. With the Launch edge function solution, you should
+              NOT see CSP errors blocking the Cloudflare script.
             </p>
           </div>
         </main>
@@ -125,7 +122,7 @@ export default function Home() {
         <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
           <div className="text-center">
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Hash-based CSP Solution Test - Check browser console for results
+              Launch Edge Function Solution - Check browser console for results
             </p>
           </div>
         </footer>

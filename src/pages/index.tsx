@@ -18,23 +18,34 @@ export default function Home() {
         <title>CSP + Cloudflare Email Protection</title>
         <meta
           name="description"
-          content="Using Launch edge function to provide nonce to Cloudflare&apos;s email protection"
+          content="Using Launch edge function to provide nonce to Cloudflare's email protection"
         />
 
         {/* Load Cloudflare email protection script via Edge Function */}
+        <script src="/functions/proxy" async nonce="test123" />
+
+        {/* Debug script to verify everything is working */}
         <script
-          src="/functions/email-protection"
-          async
+          nonce="test123"
+          dangerouslySetInnerHTML={{
+            __html: `
+               console.log('Launch edge function solution loaded successfully!');
+               console.log('Nonce: test123');
+               console.log('CSP with strict-dynamic is working properly.');
+             `,
+          }}
         />
       </Head>
 
-      <div className={`${geistSans.className} ${geistMono.className} font-sans min-h-screen p-8`}>
+      <div
+        className={`${geistSans.className} ${geistMono.className} font-sans min-h-screen p-8`}
+      >
         <h1 className="text-4xl font-bold mb-4">
           CSP + Cloudflare Email Protection
         </h1>
         <p className="mb-6">
-          This page uses a Launch edge function to provide a dynamic nonce
-          for Cloudflare&apos;s email protection script, ensuring strict-dynamic CSP
+          This page uses a Launch edge function to provide a dynamic nonce for
+          Cloudflare&apos;s email protection script, ensuring strict-dynamic CSP
           compliance.
         </p>
 

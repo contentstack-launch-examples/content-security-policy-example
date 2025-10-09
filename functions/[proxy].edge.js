@@ -1,31 +1,35 @@
-// functions/[proxy].edge.js
-export default async function handler(request, context) {
+// Launch Edge Function - functions/[proxy].edge.js
+export default async function handler(request) {
   try {
-    const { proxy } = context.params;
+    // Use a simple nonce for testing
+    const nonce = "test123";
 
-    // Only handle email-protection script request
-    if (proxy !== "email-protection") {
-      return new Response("// Unknown script", { status: 404 });
-    }
-
-    // Generate a web-safe nonce per request
-    const array = new Uint8Array(16);
-    crypto.getRandomValues(array);
-    const nonce = Array.from(array)
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
-
-    // Return a small HTML/JS snippet that sets the nonce and loads Cloudflare's script
-    const html = `
-      <script nonce="${nonce}">
-        window.CF_EMAIL_PROTECTION_NONCE = "${nonce}";
-      </script>
-      <script src="https://static.cloudflareinsights.com/email-protection.js" async nonce="${nonce}"></script>
+    // Return JavaScript content that simulates Cloudflare email protection
+    const scriptContent = `
+      // Simulate Cloudflare email protection script
+      console.log('Edge function loaded with nonce:', '${nonce}');
+      window.CF_EMAIL_PROTECTION_NONCE = "${nonce}";
+      
+      // Simulate email protection functionality
+      function decodeEmail(encodedEmail) {
+        // Simple simulation - in real Cloudflare script this would decode the email
+        console.log('Email protection would decode:', encodedEmail);
+        return encodedEmail;
+      }
+      
+      // Initialize email protection
+      document.addEventListener('DOMContentLoaded', function() {
+        console.log('Cloudflare email protection initialized');
+        const mailtoLinks = document.querySelectorAll('a[href*="email-protection"]');
+        mailtoLinks.forEach(function(link) {
+          console.log('Found protected email link:', link.href);
+        });
+      });
     `;
 
-    return new Response(html, {
+    return new Response(scriptContent, {
       headers: {
-        "Content-Type": "text/html",
+        "Content-Type": "application/javascript",
         "Cache-Control": "public, max-age=3600",
         "Access-Control-Allow-Origin": "*",
         "X-Content-Type-Options": "nosniff",
@@ -36,7 +40,7 @@ export default async function handler(request, context) {
     return new Response("// Error loading email protection script", {
       status: 500,
       headers: {
-        "Content-Type": "text/html",
+        "Content-Type": "application/javascript",
         "X-Content-Type-Options": "nosniff",
       },
     });

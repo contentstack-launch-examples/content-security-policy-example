@@ -36,6 +36,10 @@ export default function Home() {
                   // This simulates what happens when email protection is enabled
                   console.log('Cloudflare email protection would be initialized here');
                   
+                  // Check if the Cloudflare script loaded
+                  const scripts = document.querySelectorAll('script[src*="email-decode"]');
+                  console.log('Found', scripts.length, 'email-decode scripts');
+                  
                   // Simulate the email protection trying to decode protected emails
                   const mailtoLinks = document.querySelectorAll('a[href^="mailto:"]');
                   mailtoLinks.forEach(function(link) {

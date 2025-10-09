@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
 
@@ -58,16 +57,16 @@ export default function Home() {
               CSP + Cloudflare Email Protection Issue
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-              This page reproduces the CSP console error when using Cloudflare's
-              email protection (enabled feature) with nonce-based CSP and
-              strict-dynamic directive.
+              This page reproduces the CSP console error when using
+              Cloudflare&apos;s email protection (enabled feature) with
+              nonce-based CSP and strict-dynamic directive.
             </p>
           </div>
 
           <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-600 rounded-lg p-4 mb-8">
             <h2 className="text-lg font-semibold mb-2">Expected Behavior:</h2>
             <p className="text-sm">
-              You should see a CSP console error because Cloudflare's email
+              You should see a CSP console error because Cloudflare&apos;s email
               protection script (enabled feature) is not allowed by the strict
               CSP policy with nonce-based restrictions. The protected email
               links will be broken because the decoding script is blocked.
@@ -111,12 +110,12 @@ export default function Home() {
             <h3 className="text-lg font-semibold mb-2">CSP Error Expected:</h3>
             <p className="text-sm font-mono">
               Refused to load the script
-              'https://dev.bibbyfinancialservices.com/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js'
+              &apos;https://dev.bibbyfinancialservices.com/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js&apos;
               because it violates the following Content Security Policy
-              directive: "script-src-elem 'unsafe-inline' 'strict-dynamic'
-              https: http: 'unsafe-eval' 'nonce-...'". Note that
-              'strict-dynamic' is present, so host-based allowlisting is
-              disabled.
+              directive: &quot;script-src-elem &apos;unsafe-inline&apos;
+              &apos;strict-dynamic&apos; https: http: &apos;unsafe-eval&apos;
+              &apos;nonce-...&apos;&quot;. Note that &apos;strict-dynamic&apos;
+              is present, so host-based allowlisting is disabled.
             </p>
           </div>
         </main>

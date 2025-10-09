@@ -22,7 +22,7 @@ export default function Home() {
         />
         {/* Cloudflare email protection script - this will be blocked by CSP */}
         <script
-          src="https://dev.bibbyfinancialservices.com/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+          src="https://cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
           async
         />
         {/* Simulate Cloudflare email protection being enabled */}
@@ -67,10 +67,10 @@ export default function Home() {
           <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-600 rounded-lg p-4 mb-8">
             <h2 className="text-lg font-semibold mb-2">Expected Behavior:</h2>
             <p className="text-sm">
-              You should see a CSP console error because Cloudflare&apos;s email
-              protection script (enabled feature) is not allowed by the strict
-              CSP policy with nonce-based restrictions. The protected email
-              links will be broken because the decoding script is blocked.
+              The browser will block Cloudflare&apos;s email protection script
+              due to the strict CSP policy with nonce-based restrictions. This
+              will cause the protected email links to be broken because the
+              decoding script cannot load.
             </p>
           </div>
 
@@ -107,16 +107,14 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-600 rounded-lg p-4 mt-8">
-            <h3 className="text-lg font-semibold mb-2">CSP Error Expected:</h3>
-            <p className="text-sm font-mono">
-              Refused to load the script
-              &apos;https://dev.bibbyfinancialservices.com/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js&apos;
-              because it violates the following Content Security Policy
-              directive: &quot;script-src-elem &apos;unsafe-inline&apos;
-              &apos;strict-dynamic&apos; https: http: &apos;unsafe-eval&apos;
-              &apos;nonce-...&apos;&quot;. Note that &apos;strict-dynamic&apos;
-              is present, so host-based allowlisting is disabled.
+          <div className="bg-blue-100 dark:bg-blue-900 border border-blue-400 dark:border-blue-600 rounded-lg p-4 mt-8">
+            <h3 className="text-lg font-semibold mb-2">
+              Check Browser Console:
+            </h3>
+            <p className="text-sm">
+              Open your browser&apos;s Developer Tools (F12) and check the
+              Console tab. You should see a real CSP error message from the
+              browser blocking the Cloudflare script.
             </p>
           </div>
         </main>

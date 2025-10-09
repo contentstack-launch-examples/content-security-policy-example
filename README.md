@@ -32,10 +32,10 @@ npm run dev
 
 When you open the page, you should see:
 
-1. **CSP Console Error**: The browser console will show an error like:
+1. **CSP Console Error**: The browser will automatically generate a CSP error in the console when it blocks the Cloudflare script. The error will look similar to:
 
    ```
-   Refused to load the script 'https://dev.bibbyfinancialservices.com/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js'
+   Refused to load the script 'https://cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js'
    because it violates the following Content Security Policy directive: "script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-...'".
    Note that 'strict-dynamic' is present, so host-based allowlisting is disabled.
    ```

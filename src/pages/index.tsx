@@ -59,26 +59,27 @@ export default function Home() {
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
           <div className="text-center sm:text-left">
             <h1 className="text-4xl font-bold mb-4">
-              CSP + Cloudflare Email Protection - Hash Solution Test
+              CSP + Cloudflare Email Protection - Solution Test
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-              Testing the hash-based CSP solution to allow Cloudflare&apos;s
-              email protection script while maintaining strict-dynamic security.
+              Testing CSP solution to allow Cloudflare&apos;s email protection
+              script. Currently testing without strict-dynamic to isolate the
+              issue.
             </p>
           </div>
 
           <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-600 rounded-lg p-4 mb-8">
             <h2 className="text-lg font-semibold mb-2">Expected Behavior:</h2>
             <p className="text-sm">
-              With the hash-based CSP solution, Cloudflare&apos;s email
-              protection script should now be allowed while maintaining
-              strict-dynamic security. The email links should work properly.
+              Without strict-dynamic, the Cloudflare email protection script
+              should now be allowed via the &apos;self&apos; directive. The
+              email links should work properly.
             </p>
           </div>
 
           <div className="space-y-4">
             <h2 className="text-2xl font-semibold">
-              Protected Email Links (Should work with hash-based CSP):
+              Protected Email Links (Should work without strict-dynamic):
             </h2>
 
             {/* These mailto links are protected by Cloudflare but broken due to CSP */}

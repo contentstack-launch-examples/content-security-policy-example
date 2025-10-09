@@ -27,6 +27,7 @@ export default function handler(req, res) {
       // Initialize email protection
       document.addEventListener('DOMContentLoaded', function() {
         console.log('Cloudflare email protection initialized via Launch API');
+        
         const mailtoLinks = document.querySelectorAll('a[href*="email-protection"]');
         
         mailtoLinks.forEach(function(link) {
@@ -47,6 +48,16 @@ export default function handler(req, res) {
             console.log('Decoded email:', encodedEmail, '->', decodedEmail);
           }
         });
+        
+        // Prevent any requests to /cdn-cgi/l/email-protection
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options) {
+          if (typeof url === 'string' && url.includes('/cdn-cgi/l/email-protection')) {
+            console.log('Blocked request to:', url);
+            return Promise.reject(new Error('Email protection handled client-side'));
+          }
+          return originalFetch.apply(this, arguments);
+        };
       });
     `;
 

@@ -1,6 +1,12 @@
 // Launch Edge Function - functions/[proxy].edge.js
 export default async function handler(request) {
   try {
+    // Only handle requests to /functions/proxy
+    const url = new URL(request.url);
+    if (url.pathname !== "/functions/proxy") {
+      return new Response("Not Found", { status: 404 });
+    }
+
     // Use a simple nonce for testing
     const nonce = "test123";
 

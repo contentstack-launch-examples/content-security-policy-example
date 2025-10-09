@@ -18,7 +18,7 @@ export default function Home() {
         <title>CSP + Cloudflare Email Protection</title>
         <meta
           name="description"
-          content="Using Launch edge function to provide nonce to Cloudflare email protection"
+          content="Using Launch edge function to provide nonce to Cloudflare&apos;s email protection"
         />
 
         {/* Load Cloudflare email protection script via Edge Function */}
@@ -34,7 +34,7 @@ export default function Home() {
         </h1>
         <p className="mb-6">
           This page uses a Launch edge function to provide a dynamic nonce
-          for Cloudflare's email protection script, ensuring strict-dynamic CSP
+          for Cloudflare&apos;s email protection script, ensuring strict-dynamic CSP
           compliance.
         </p>
 

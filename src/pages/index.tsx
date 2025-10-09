@@ -20,8 +20,15 @@ export default function Home() {
           name="description"
           content="Reproducing CSP issue with Cloudflare email protection"
         />
-        {/* Cloudflare email protection script - proxied through Launch edge function */}
-        <script src="/functions/proxy" async nonce="test123" />
+        {/* Test script to verify CSP and nonce are working */}
+        <script
+          nonce="test123"
+          dangerouslySetInnerHTML={{
+            __html: `
+              console.log('Test script with nonce is working!');
+            `,
+          }}
+        />
         {/* Simulate Cloudflare email protection being enabled */}
         <script
           nonce="test123"
@@ -56,11 +63,11 @@ export default function Home() {
         <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
           <div className="text-center sm:text-left">
             <h1 className="text-4xl font-bold mb-4">
-              CSP + Cloudflare Email Protection - Edge Function Solution
+              CSP + Cloudflare Email Protection - Testing Basic Setup
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-              Testing edge function solution to proxy Cloudflare&apos;s email
-              protection script while maintaining strict-dynamic CSP security.
+              Testing basic CSP and nonce functionality before implementing edge
+              function solution.
             </p>
           </div>
 

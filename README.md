@@ -8,7 +8,7 @@ The issue occurs when using:
 
 - Nonce-based CSP declarations
 - `strict-dynamic` directive
-- Cloudflare's email protection feature
+- Cloudflare's email protection feature (enabled)
 
 According to Cloudflare's documentation, they should automatically pick up nonces and attach them to their scripts, but this fails in practice, causing their email protection script to be blocked by CSP.
 
@@ -55,9 +55,10 @@ The custom server (`server.js`) sets strict CSP headers matching the exact confi
 
 ### Cloudflare Email Protection
 
-- Includes Cloudflare's email protection script in the page head
-- Creates multiple mailto links that would normally be protected
-- The script fails to load due to CSP restrictions
+- Includes Cloudflare's email protection script in the page head (simulating enabled feature)
+- Creates multiple protected email links using Cloudflare's `/cdn-cgi/l/email-protection` format
+- Includes `data-cfemail` attributes for email decoding
+- The script fails to load due to CSP restrictions, breaking the email links
 
 ## Files Modified
 

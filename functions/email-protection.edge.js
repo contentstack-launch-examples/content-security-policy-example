@@ -1,4 +1,4 @@
-// Launch Edge Function - functions/proxy.edge.js
+// Launch Edge Function - functions/email-protection.edge.js
 export default async function handler(request) {
   try {
     // Use a simple nonce for testing

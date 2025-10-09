@@ -22,7 +22,7 @@ export default function Home() {
         />
 
         {/* Load Cloudflare email protection script via Edge Function */}
-        <script src="/functions/proxy" async nonce="test123" />
+        <script src="/functions/email-protection" async nonce="test123" />
 
         {/* Debug script to verify everything is working */}
         <script

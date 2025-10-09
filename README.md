@@ -62,17 +62,31 @@ The custom server (`server.js`) sets strict CSP headers matching the exact confi
 
 ## Files Modified
 
-- `server.js` - Custom server with CSP headers
+- `next.config.ts` - CSP headers configuration for Launch deployment
 - `src/pages/index.tsx` - Main page with email protection and mailto links
+- `server.js` - Custom server with CSP headers (for local testing)
 - `package.json` - Updated scripts to use custom server
 
 ## Reproduction Steps
 
-1. Start the development server
+### Local Testing (with custom server)
+
+1. Start the development server: `npm run dev`
 2. Open browser developer tools (F12)
 3. Navigate to the Console tab
-4. Visit the page
+4. Visit http://localhost:3000
 5. Observe the CSP error in the console
 6. Try clicking the email links - they should be broken
+
+### Launch Deployment Testing
+
+1. Deploy to Contentstack Launch
+2. Open browser developer tools (F12)
+3. Navigate to the Console tab
+4. Visit the deployed URL
+5. Observe the CSP error in the console
+6. Try clicking the email links - they should be broken
+
+**Note**: The CSP headers are configured in `next.config.ts` for Launch deployment, while `server.js` is used for local testing.
 
 This reproduces the exact issue described in the support query where Cloudflare's email protection fails to work with strict CSP policies using nonces and `strict-dynamic`.

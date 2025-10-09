@@ -27,6 +27,7 @@ export default function Home() {
         />
         {/* Simulate Cloudflare email protection being enabled */}
         <script
+          nonce="test123"
           dangerouslySetInnerHTML={{
             __html: `
               // Simulate Cloudflare email protection initialization

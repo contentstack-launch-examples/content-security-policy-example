@@ -12,11 +12,11 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               `default-src 'self'`,
-              `script-src 'self' 'unsafe-inline' 'strict-dynamic'`,
+              `script-src 'self' 'strict-dynamic' https://challenges.cloudflare.com`,
               `style-src 'self' 'unsafe-inline'`,
               `img-src 'self' data: https:`,
               `font-src 'self'`,
-              `connect-src 'self'`,
+              `connect-src 'self' https://challenges.cloudflare.com`,
               `frame-ancestors 'none'`,
               `base-uri 'self'`,
               `form-action 'self'`,

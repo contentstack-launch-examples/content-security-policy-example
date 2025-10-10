@@ -1,95 +1,87 @@
-# CSP + Cloudflare Email Protection - Launch Edge Function Solution
+# CSP + Cloudflare Email Protection Test
 
-This Next.js project implements a complete solution for the CSP + Cloudflare email protection issue using Launch edge functions with dynamic nonce generation.
+This project demonstrates the proper configuration of Content Security Policy (CSP) headers with Cloudflare's email protection feature using nonce-based CSP declarations.
 
-## Problem Solved
+## The Problem
 
-The original issue was that Cloudflare's email protection script was being blocked by Content Security Policy (CSP) when using `strict-dynamic` directive. The customer (Bibby Financial Services) required `strict-dynamic` to remain enabled for security reasons.
+When using Cloudflare's email protection with strict CSP policies that include `'strict-dynamic'` and nonce-based declarations, the email protection scripts can be blocked, causing "mailto" links to break.
 
-## Solution Overview
+## The Solution
 
-We implemented a Launch edge function solution that:
+This project shows two scenarios:
 
-- ✅ Proxies Cloudflare's email protection script through our own domain
-- ✅ Uses dynamic nonce generation for maximum security
-- ✅ Maintains `strict-dynamic` CSP directive as required
-- ✅ Allows email protection to work without compromising security
+1. **Working Configuration** (`/`) - Properly configured CSP that allows Cloudflare email protection
+2. **Problematic Configuration** (`/problematic`) - CSP that blocks Cloudflare email protection
 
-## Technical Implementation
+## Key CSP Configuration
 
-### 1. Launch Edge Function (`functions/[proxy].edge.js`)
+### Working Configuration
 
-- Serves the Cloudflare email protection script from our domain
-- Generates dynamic nonce for each request
-- Returns proper JavaScript content with correct headers
+```javascript
+script-src 'self' 'strict-dynamic' https://challenges.cloudflare.com
+```
 
-### 2. Static Nonce Configuration
+### Problematic Configuration
 
-- Uses static nonce `'nonce-test123'` for simplicity and reliability
-- Nonce is configured in CSP headers and applied to all script tags
-- Ensures CSP compliance while maintaining security
+```javascript
+script-src 'self' 'strict-dynamic'
+// Missing: https://challenges.cloudflare.com
+```
 
-### 3. CSP Configuration (`next.config.ts`)
+## Getting Started
 
-- Maintains `strict-dynamic` directive as required by customer
-- Uses static nonce in CSP headers for reliability
-- Blocks unauthorized scripts while allowing our edge function
+1. Install dependencies:
 
-### 4. Protected Email Links
+```bash
+npm install
+```
 
-- Uses Cloudflare's email protection format (`/cdn-cgi/l/email-protection#`)
-- Includes `data-cfemail` attributes for proper decoding
-- Works seamlessly with the proxied script
+2. Run the development server:
+
+```bash
+npm run dev
+```
+
+3. Open [http://localhost:3000](http://localhost:3000) to see the working example
+4. Visit [http://localhost:3000/problematic](http://localhost:3000/problematic) to see the broken example
+
+## Testing Instructions
+
+1. Open browser developer tools (F12)
+2. Go to Console tab
+3. Look for CSP violation errors
+4. Click on email links to test functionality
+5. Check Network tab for blocked requests to `/cdn-cgi/l/email-protection`
 
 ## Files Structure
 
-```
-├── functions/
-│   └── [proxy].edge.js          # Launch edge function
-├── src/pages/
-│   └── index.tsx                # Main page with email protection
-├── next.config.ts               # CSP configuration
-└── README.md                    # This file
-```
+- `src/pages/index.tsx` - Working example with proper CSP
+- `src/pages/problematic.tsx` - Broken example showing the issue
+- `middleware.ts` - Generates nonces and sets CSP headers
+- `next.config.ts` - Base CSP configuration
 
-## How It Works
+## Cloudflare Email Protection
 
-1. **Page Load**: CSP headers are set with static nonce
-2. **Script Loading**: Edge function serves Cloudflare script with matching nonce
-3. **CSP Validation**: Browser validates script against CSP with nonce
-4. **Email Protection**: Script decodes protected email links
-5. **Security Maintained**: `strict-dynamic` remains enabled
+The project uses Cloudflare's actual email protection feature with:
 
-## Expected Results
+- Proper `data-cfemail` attributes
+- `/cdn-cgi/l/email-protection` URLs
+- Nonce-based CSP integration
 
-When deployed, you should see:
+## CSP Headers
 
-- ✅ No CSP errors in browser console
-- ✅ Success messages in console confirming solution is working
-- ✅ Email links that open your email client when clicked
-- ✅ Protected email addresses properly decoded
+The middleware generates dynamic nonces and sets CSP headers that include:
 
-## Verification Steps
+- `'strict-dynamic'` directive
+- `https://challenges.cloudflare.com` in script-src
+- Nonce-based script execution
 
-1. Open browser Developer Tools (F12)
-2. Check Console tab for success messages
-3. Verify no CSP errors are present
-4. Test email links - they should open your email client
-5. Check Network tab - script should load from `/functions/proxy`
+## Customer Issue Resolution
 
-## Benefits
+This project addresses the Bibby Financial Services support query by demonstrating:
 
-- **Security**: Maintains strict CSP with `strict-dynamic`
-- **Functionality**: Email protection works as expected
-- **Performance**: API route provides fast script delivery
-- **Maintainability**: Clean, well-documented solution
-- **Scalability**: Works with Launch's serverless infrastructure
+1. **The Problem**: CSP blocking Cloudflare email protection scripts
+2. **The Solution**: Proper CSP configuration with Cloudflare domains
+3. **Testing**: Both working and broken scenarios for comparison
 
-## Customer Requirements Met
-
-- ✅ `strict-dynamic` CSP directive maintained
-- ✅ Email protection functionality working
-- ✅ No security compromises
-- ✅ Clean, production-ready solution
-
-This solution perfectly addresses the Bibby Financial Services support query while maintaining all their security requirements.
+The key insight is that Cloudflare's email protection requires `https://challenges.cloudflare.com` to be included in the `script-src` directive when using `'strict-dynamic'`.

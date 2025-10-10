@@ -1,7 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
 import Link from "next/link";
-import { GetServerSideProps } from "next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,11 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-interface HomeProps {
-  nonce: string;
-}
-
-export default function ProblematicPage({ nonce }: HomeProps) {
+export default function ProblematicPage() {
   return (
     <>
       <Head>
@@ -28,10 +23,7 @@ export default function ProblematicPage({ nonce }: HomeProps) {
         />
 
         {/* This CSP configuration will BLOCK Cloudflare email protection - matches customer's exact issue */}
-        <meta
-          httpEquiv="Content-Security-Policy"
-          content="default-src 'self'; script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-AueJwNry5qMrTymYNUWFtg=='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
-        />
+        {/* CSP is set via HTTP headers in next.config.ts */}
 
         {/* Cloudflare Email Protection Script - This will be BLOCKED by CSP (no nonce) */}
         <script
@@ -39,13 +31,12 @@ export default function ProblematicPage({ nonce }: HomeProps) {
           async
         />
 
-        {/* Debug script */}
+        {/* Debug script with static nonce */}
         <script
-          {...(nonce && { nonce })}
+          nonce="test123"
           dangerouslySetInnerHTML={{
             __html: `
                console.log('PROBLEMATIC CSP Configuration Test');
-               console.log('Nonce: ${nonce || "undefined"}');
                console.log('This CSP will BLOCK Cloudflare email protection scripts');
                console.log('Look for CSP violation errors in console');
              `,
@@ -147,22 +138,4 @@ export default function ProblematicPage({ nonce }: HomeProps) {
   );
 }
 
-// Get nonce from middleware headers
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const nonce = req.headers["x-nonce"] as string;
-
-  // Fallback nonce generation if middleware didn't set it
-  const fallbackNonce =
-    nonce ||
-    (() => {
-      const array = new Uint8Array(16);
-      crypto.getRandomValues(array);
-      return btoa(String.fromCharCode(...array));
-    })();
-
-  return {
-    props: {
-      nonce: fallbackNonce,
-    },
-  };
-};
+// Static page - no server-side props needed

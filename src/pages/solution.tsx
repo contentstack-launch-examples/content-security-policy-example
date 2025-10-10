@@ -1,7 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
 import Link from "next/link";
-import { GetServerSideProps } from "next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,11 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-interface HomeProps {
-  nonce: string;
-}
-
-export default function SolutionPage({ nonce }: HomeProps) {
+export default function SolutionPage() {
   return (
     <>
       <Head>
@@ -28,10 +23,7 @@ export default function SolutionPage({ nonce }: HomeProps) {
         />
 
         {/* SOLUTION: CSP configuration that WORKS with Cloudflare email protection */}
-        <meta
-          httpEquiv="Content-Security-Policy"
-          content="default-src 'self'; script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-AueJwNry5qMrTymYNUWFtg==' 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
-        />
+        {/* CSP is set via HTTP headers in next.config.ts */}
 
         {/* Cloudflare Email Protection Script - This will WORK with proper CSP */}
         <script
@@ -39,13 +31,12 @@ export default function SolutionPage({ nonce }: HomeProps) {
           async
         />
 
-        {/* Debug script */}
+        {/* Debug script with static nonce */}
         <script
-          {...(nonce && { nonce })}
+          nonce="test123"
           dangerouslySetInnerHTML={{
             __html: `
                console.log('SOLUTION: CSP Configuration Test');
-               console.log('Nonce: ${nonce || "undefined"}');
                console.log('This CSP allows Cloudflare email protection scripts');
                console.log('Email protection should work properly');
              `,
@@ -70,16 +61,16 @@ export default function SolutionPage({ nonce }: HomeProps) {
             ✅ WORKING CSP Configuration
           </h3>
           <p className="text-green-700 text-sm mb-2">
-            The key fix: Add <code>&apos;self&apos;</code> to script-src-elem:
+            The key fix: Use proper CSP configuration with Cloudflare domains:
           </p>
           <code className="text-xs bg-green-100 p-2 block rounded">
-            {`script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-AueJwNry5qMrTymYNUWFtg==' 'self'`}
+            {`script-src 'self' 'strict-dynamic' https://challenges.cloudflare.com`}
           </code>
           <p className="text-green-700 text-sm mt-2">
             <strong>Why this works:</strong> Adding{" "}
-            <code>&apos;self&apos;</code> allows scripts from the same domain,
-            which includes Cloudflare&apos;s email protection scripts served
-            from your domain.
+            <code>https://challenges.cloudflare.com</code> allows
+            Cloudflare&apos;s email protection scripts to load properly with
+            &apos;strict-dynamic&apos;.
           </p>
         </div>
 
@@ -126,12 +117,13 @@ export default function SolutionPage({ nonce }: HomeProps) {
               <strong>Fixed CSP (WORKING):</strong>
             </p>
             <code className="bg-green-100 p-2 block rounded text-xs">
-              {`script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-AueJwNry5qMrTymYNUWFtg==' 'self'`}
+              {`script-src 'self' 'strict-dynamic' https://challenges.cloudflare.com`}
             </code>
 
             <p>
-              <strong>Change:</strong> Add <code>&apos;self&apos;</code> to the
-              end of script-src-elem
+              <strong>Change:</strong> Use proper CSP with{" "}
+              <code>https://challenges.cloudflare.com</code> instead of relying
+              on nonce-based approach
             </p>
           </div>
         </div>
@@ -155,22 +147,4 @@ export default function SolutionPage({ nonce }: HomeProps) {
   );
 }
 
-// Get nonce from middleware headers
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const nonce = req.headers["x-nonce"] as string;
-
-  // Fallback nonce generation if middleware didn't set it
-  const fallbackNonce =
-    nonce ||
-    (() => {
-      const array = new Uint8Array(16);
-      crypto.getRandomValues(array);
-      return btoa(String.fromCharCode(...array));
-    })();
-
-  return {
-    props: {
-      nonce: fallbackNonce,
-    },
-  };
-};
+// Static page - no server-side props needed

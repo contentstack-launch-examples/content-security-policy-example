@@ -1,7 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
 import Link from "next/link";
-import { GetServerSideProps } from "next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,11 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-interface HomeProps {
-  nonce: string;
-}
-
-export default function Home({ nonce }: HomeProps) {
+export default function Home() {
   return (
     <>
       <Head>
@@ -27,22 +22,20 @@ export default function Home({ nonce }: HomeProps) {
           content="Using Launch API route to provide nonce to Cloudflare's email protection"
         />
 
-        {/* Cloudflare Email Protection Script - This should automatically pick up the nonce */}
+        {/* CSP is set via HTTP headers in next.config.ts */}
+
+        {/* Cloudflare Email Protection Script - This should work with proper CSP */}
         <script
-          {...(nonce && { nonce })}
           src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
           async
         />
 
-        {/* Debug script to verify CSP and nonce */}
+        {/* Debug script with static nonce */}
         <script
-          {...(nonce && { nonce })}
+          nonce="test123"
           dangerouslySetInnerHTML={{
             __html: `
                console.log('CSP Configuration Test');
-               console.log('Nonce: ${
-                 nonce || "undefined - using fallback CSP"
-               }');
                console.log('CSP with strict-dynamic should allow Cloudflare scripts');
                console.log('Check for CSP violations in console');
              `,
@@ -137,22 +130,4 @@ export default function Home({ nonce }: HomeProps) {
   );
 }
 
-// Get nonce from middleware headers
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const nonce = req.headers["x-nonce"] as string;
-
-  // Fallback nonce generation if middleware didn't set it
-  const fallbackNonce =
-    nonce ||
-    (() => {
-      const array = new Uint8Array(16);
-      crypto.getRandomValues(array);
-      return btoa(String.fromCharCode(...array));
-    })();
-
-  return {
-    props: {
-      nonce: fallbackNonce,
-    },
-  };
-};
+// Static page - no server-side props needed

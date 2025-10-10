@@ -6,14 +6,14 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Working CSP for main page
+        // Working CSP for main page - with strict-dynamic and Cloudflare support
         source: "/",
         headers: [
           {
             key: "Content-Security-Policy",
             value: [
               `default-src 'self'`,
-              `script-src 'self' 'strict-dynamic' https://challenges.cloudflare.com`,
+              `script-src 'self' 'nonce-test123' 'strict-dynamic' https://challenges.cloudflare.com`,
               `style-src 'self' 'unsafe-inline'`,
               `img-src 'self' data: https:`,
               `font-src 'self'`,
@@ -26,14 +26,14 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Working CSP for solution page
+        // Working CSP for solution page - with strict-dynamic and Cloudflare support
         source: "/solution",
         headers: [
           {
             key: "Content-Security-Policy",
             value: [
               `default-src 'self'`,
-              `script-src 'self' 'strict-dynamic' https://challenges.cloudflare.com`,
+              `script-src 'self' 'nonce-test123' 'strict-dynamic' https://challenges.cloudflare.com`,
               `style-src 'self' 'unsafe-inline'`,
               `img-src 'self' data: https:`,
               `font-src 'self'`,
@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Problematic CSP for problematic page
+        // Problematic CSP for problematic page - matches customer's exact issue
         source: "/problematic",
         headers: [
           {

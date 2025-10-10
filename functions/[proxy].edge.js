@@ -1,6 +1,7 @@
 export default async function handler(request, context) {
   try {
-    const response = await context.next();
+    // Forward the request to the origin server
+    const response = await fetch(request);
 
     // Only process HTML responses
     const contentType = response.headers.get("content-type");
@@ -43,6 +44,6 @@ export default async function handler(request, context) {
   } catch (error) {
     console.error("Edge function error:", error);
     // Return original response if edge function fails
-    return context.next();
+    return fetch(request);
   }
 }

@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
+import Link from "next/link";
 import { GetServerSideProps } from "next";
 
 const geistSans = Geist({
@@ -66,8 +67,9 @@ export default function Home({ nonce }: HomeProps) {
             CSP Configuration Status
           </h3>
           <p className="text-yellow-700 text-sm">
-            This page uses nonce-based CSP with 'strict-dynamic' directive.
-            Cloudflare email protection should work with this configuration.
+            This page uses nonce-based CSP with &apos;strict-dynamic&apos;
+            directive. Cloudflare email protection should work with this
+            configuration.
           </p>
         </div>
 
@@ -117,18 +119,18 @@ export default function Home({ nonce }: HomeProps) {
         </div>
 
         <div className="mt-4 flex space-x-4">
-          <a
+          <Link
             href="/problematic"
             className="inline-block bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg transition-colors"
           >
             View Problem →
-          </a>
-          <a
+          </Link>
+          <Link
             href="/solution"
             className="inline-block bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-colors"
           >
             View Solution →
-          </a>
+          </Link>
         </div>
       </div>
     </>

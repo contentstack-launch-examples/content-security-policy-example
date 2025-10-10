@@ -1,5 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Head from "next/head";
+import Link from "next/link";
 import { GetServerSideProps } from "next";
 
 const geistSans = Geist({
@@ -136,18 +137,18 @@ export default function SolutionPage({ nonce }: HomeProps) {
         </div>
 
         <div className="mt-4 flex space-x-4">
-          <a
+          <Link
             href="/problematic"
             className="inline-block bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg transition-colors"
           >
             ← View Problem
-          </a>
-          <a
+          </Link>
+          <Link
             href="/"
             className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors"
           >
             ← Back to Main
-          </a>
+          </Link>
         </div>
       </div>
     </>

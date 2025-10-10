@@ -1,9 +1,8 @@
 export default async function handler(request, context) {
   try {
-    // Forward the request to the origin server
     const response = await fetch(request);
 
-    // Only process HTML responses
+    // Process HTML only
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("text/html")) {
       return response;
@@ -11,21 +10,21 @@ export default async function handler(request, context) {
 
     let html = await response.text();
 
-    // Generate random nonce
+    // Generate nonce
     const nonce = Array.from(crypto.getRandomValues(new Uint8Array(16)))
       .map((byte) => byte.toString(16).padStart(2, "0"))
       .join("");
 
-    // Inject nonce into script tags that don't already have one
+    // Add nonce to scripts
     html = html.replace(/<script(?!.*nonce=)/g, `<script nonce="${nonce}"`);
 
-    // Inject a script to handle dynamic script creation by Next.js
+    // Handle dynamic scripts
     const dynamicScriptHandler = `
       <script nonce="${nonce}">
-        // Store the nonce globally for dynamic script creation
+        // Store nonce globally
         window.__NONCE__ = "${nonce}";
         
-        // Override document.createElement to add nonce to dynamically created scripts
+        // Override createElement
         const originalCreateElement = document.createElement;
         document.createElement = function(tagName) {
           const element = originalCreateElement.call(this, tagName);
@@ -35,7 +34,7 @@ export default async function handler(request, context) {
           return element;
         };
         
-        // Also handle scripts created via innerHTML
+        // Handle innerHTML scripts
         const originalInnerHTMLSetter = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML').set;
         Object.defineProperty(Element.prototype, 'innerHTML', {
           set: function(value) {
@@ -48,10 +47,10 @@ export default async function handler(request, context) {
         });
       </script>`;
 
-    // Insert the dynamic script handler before the closing head tag
+    // Insert handler
     html = html.replace("</head>", dynamicScriptHandler + "</head>");
 
-    // Update CSP header with strict-dynamic
+    // Update CSP
     const originalCSP = response.headers.get("Content-Security-Policy") || "";
     let updatedCSP = originalCSP;
 
@@ -64,7 +63,7 @@ export default async function handler(request, context) {
       updatedCSP += `; script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`;
     }
 
-    // Create new response with updated headers
+    // Return response
     const newHeaders = new Headers(response.headers);
     newHeaders.set("Content-Security-Policy", updatedCSP);
 
@@ -75,7 +74,6 @@ export default async function handler(request, context) {
     });
   } catch (error) {
     console.error("Edge function error:", error);
-    // Return original response if edge function fails
     return fetch(request);
   }
 }

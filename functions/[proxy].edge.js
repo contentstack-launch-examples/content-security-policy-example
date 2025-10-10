@@ -19,17 +19,49 @@ export default async function handler(request, context) {
     // Inject nonce into script tags that don't already have one
     html = html.replace(/<script(?!.*nonce=)/g, `<script nonce="${nonce}"`);
 
-    // Update CSP header
+    // Inject a script to handle dynamic script creation by Next.js
+    const dynamicScriptHandler = `
+      <script nonce="${nonce}">
+        // Store the nonce globally for dynamic script creation
+        window.__NONCE__ = "${nonce}";
+        
+        // Override document.createElement to add nonce to dynamically created scripts
+        const originalCreateElement = document.createElement;
+        document.createElement = function(tagName) {
+          const element = originalCreateElement.call(this, tagName);
+          if (tagName.toLowerCase() === 'script' && window.__NONCE__) {
+            element.setAttribute('nonce', window.__NONCE__);
+          }
+          return element;
+        };
+        
+        // Also handle scripts created via innerHTML
+        const originalInnerHTMLSetter = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML').set;
+        Object.defineProperty(Element.prototype, 'innerHTML', {
+          set: function(value) {
+            if (typeof value === 'string' && value.includes('<script') && window.__NONCE__) {
+              value = value.replace(/<script(?!.*nonce=)/g, '<script nonce="' + window.__NONCE__ + '"');
+            }
+            originalInnerHTMLSetter.call(this, value);
+          },
+          get: Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML').get
+        });
+      </script>`;
+
+    // Insert the dynamic script handler before the closing head tag
+    html = html.replace("</head>", dynamicScriptHandler + "</head>");
+
+    // Update CSP header with strict-dynamic
     const originalCSP = response.headers.get("Content-Security-Policy") || "";
     let updatedCSP = originalCSP;
 
     if (/script-src/.test(originalCSP)) {
       updatedCSP = originalCSP.replace(
         /script-src([^;]*)/,
-        (match, p1) => `script-src${p1} 'nonce-${nonce}'`
+        (match, p1) => `script-src${p1} 'nonce-${nonce}' 'strict-dynamic'`
       );
     } else {
-      updatedCSP += `; script-src 'self' 'nonce-${nonce}'`;
+      updatedCSP += `; script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`;
     }
 
     // Create new response with updated headers

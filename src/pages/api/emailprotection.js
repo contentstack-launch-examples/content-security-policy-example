@@ -1,8 +1,16 @@
 // Contentstack Launch API Route - src/pages/api/emailprotection.js
+
+// Generate a cryptographically secure nonce
+function generateNonce() {
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  return btoa(String.fromCharCode.apply(null, array));
+}
+
 export default function handler(req, res) {
   try {
-    // Use a simple nonce for testing
-    const nonce = "test123";
+    // Get nonce from request headers (set by middleware)
+    const nonce = req.headers["x-nonce"] || generateNonce();
 
     // Return JavaScript content that implements Cloudflare email protection
     const scriptContent = `
@@ -28,25 +36,19 @@ export default function handler(req, res) {
       document.addEventListener('DOMContentLoaded', function() {
         console.log('Cloudflare email protection initialized via Launch API');
         
-        const mailtoLinks = document.querySelectorAll('a[href*="email-protection"]');
+        const emailButtons = document.querySelectorAll('button[data-cfemail]');
         
-        mailtoLinks.forEach(function(link) {
-          console.log('Found protected email link:', link.href);
+        emailButtons.forEach(function(button) {
+          const encodedEmail = button.getAttribute('data-cfemail');
+          const decodedEmail = decodeEmail(encodedEmail);
           
-          // Extract the encoded email from the href
-          const href = link.href;
-          const emailMatch = href.match(/#(.+)$/);
+          // Update the button's onClick to use the decoded email
+          button.onclick = function() {
+            window.location.href = 'mailto:' + decodedEmail;
+          };
           
-          if (emailMatch) {
-            const encodedEmail = emailMatch[1];
-            const decodedEmail = decodeEmail(encodedEmail);
-            
-            // Update the link to be a proper mailto link
-            link.href = 'mailto:' + decodedEmail;
-            link.setAttribute('data-decoded', decodedEmail);
-            
-            console.log('Decoded email:', encodedEmail, '->', decodedEmail);
-          }
+          button.setAttribute('data-decoded', decodedEmail);
+          console.log('Decoded email button:', encodedEmail, '->', decodedEmail);
         });
         
         // Prevent any requests to /cdn-cgi/l/email-protection

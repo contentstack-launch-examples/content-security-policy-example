@@ -72,9 +72,7 @@ export default function SolutionPage({ nonce }: HomeProps) {
             The key fix: Add <code>&apos;self&apos;</code> to script-src-elem:
           </p>
           <code className="text-xs bg-green-100 p-2 block rounded">
-            script-src-elem &apos;unsafe-inline&apos; &apos;strict-dynamic&apos;
-            https: http: &apos;unsafe-eval&apos;
-            &apos;nonce-AueJwNry5qMrTymYNUWFtg==&apos; &apos;self&apos;
+            {`script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-AueJwNry5qMrTymYNUWFtg==' 'self'`}
           </code>
           <p className="text-green-700 text-sm mt-2">
             <strong>Why this works:</strong> Adding{" "}
@@ -120,18 +118,14 @@ export default function SolutionPage({ nonce }: HomeProps) {
               <strong>Current CSP (BROKEN):</strong>
             </p>
             <code className="bg-blue-100 p-2 block rounded text-xs">
-              script-src-elem &apos;unsafe-inline&apos;
-              &apos;strict-dynamic&apos; https: http: &apos;unsafe-eval&apos;
-              &apos;nonce-AueJwNry5qMrTymYNUWFtg==&apos;
+              {`script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-AueJwNry5qMrTymYNUWFtg=='`}
             </code>
 
             <p>
               <strong>Fixed CSP (WORKING):</strong>
             </p>
             <code className="bg-green-100 p-2 block rounded text-xs">
-              script-src-elem &apos;unsafe-inline&apos;
-              &apos;strict-dynamic&apos; https: http: &apos;unsafe-eval&apos;
-              &apos;nonce-AueJwNry5qMrTymYNUWFtg==&apos; &apos;self&apos;
+              {`script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-AueJwNry5qMrTymYNUWFtg==' 'self'`}
             </code>
 
             <p>

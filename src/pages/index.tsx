@@ -27,15 +27,17 @@ export default function Home({ nonce }: HomeProps) {
         />
 
         {/* Load Cloudflare email protection script via Launch API Route */}
-        <script src="/api/emailprotection" async nonce={nonce} />
+        <script src="/api/emailprotection" async {...(nonce && { nonce })} />
 
         {/* Debug script to verify everything is working */}
         <script
-          nonce={nonce}
+          {...(nonce && { nonce })}
           dangerouslySetInnerHTML={{
             __html: `
                console.log('Launch edge function solution loaded successfully!');
-               console.log('Nonce: ${nonce}');
+               console.log('Nonce: ${
+                 nonce || "undefined - using fallback CSP"
+               }');
                console.log('CSP with strict-dynamic is working properly.');
              `,
           }}
@@ -90,12 +92,21 @@ export default function Home({ nonce }: HomeProps) {
 }
 
 // Get nonce from middleware headers
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const nonce = res.getHeader("X-Nonce") as string;
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const nonce = req.headers["x-nonce"] as string;
+
+  // Fallback nonce generation if middleware didn't set it
+  const fallbackNonce =
+    nonce ||
+    (() => {
+      const array = new Uint8Array(16);
+      crypto.getRandomValues(array);
+      return btoa(String.fromCharCode(...array));
+    })();
 
   return {
     props: {
-      nonce,
+      nonce: fallbackNonce,
     },
   };
 };

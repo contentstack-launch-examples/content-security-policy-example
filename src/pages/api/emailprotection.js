@@ -12,6 +12,8 @@ export default function handler(req, res) {
     // Get nonce from request headers (set by middleware)
     const nonce = req.headers["x-nonce"] || generateNonce();
 
+    console.log("Email protection API - nonce:", nonce);
+
     // Return JavaScript content that implements Cloudflare email protection
     const scriptContent = `
       // Cloudflare email protection script via Launch API

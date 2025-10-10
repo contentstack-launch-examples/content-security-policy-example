@@ -2,9 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   // Generate a cryptographically secure nonce
-  const array = new Uint8Array(16);
-  crypto.getRandomValues(array);
-  const nonce = btoa(String.fromCharCode(...array));
+  let nonce: string;
+  try {
+    const array = new Uint8Array(16);
+    crypto.getRandomValues(array);
+    nonce = btoa(String.fromCharCode(...array));
+  } catch (error) {
+    // Fallback for edge runtime compatibility
+    nonce =
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15);
+  }
+
+  console.log("Middleware running with nonce:", nonce);
 
   // Create response
   const response = NextResponse.next();
@@ -27,6 +37,9 @@ export function middleware(request: NextRequest) {
 
   // Add nonce to response headers so pages can access it
   response.headers.set("X-Nonce", nonce);
+
+  // Also add it to request headers for getServerSideProps access
+  request.headers.set("X-Nonce", nonce);
 
   return response;
 }

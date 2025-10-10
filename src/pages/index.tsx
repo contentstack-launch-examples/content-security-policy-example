@@ -19,24 +19,23 @@ export default function Home() {
         <title>CSP + Cloudflare Email Protection</title>
         <meta
           name="description"
-          content="Using Launch API route to provide nonce to Cloudflare's email protection"
+          content="Using Launch Edge Function to provide nonce to Cloudflare's email protection"
         />
 
-        {/* CSP is set via HTTP headers in next.config.ts */}
+        {/* CSP and nonces are handled by Launch edge function */}
 
-        {/* Cloudflare Email Protection Script - This should work with proper CSP */}
+        {/* Cloudflare Email Protection Script - Edge function will add nonce */}
         <script
           src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
           async
         />
 
-        {/* Debug script with static nonce */}
+        {/* Debug script - Edge function will add nonce */}
         <script
-          nonce="test123"
           dangerouslySetInnerHTML={{
             __html: `
-               console.log('CSP Configuration Test');
-               console.log('CSP with strict-dynamic should allow Cloudflare scripts');
+               console.log('Launch Edge Function CSP Test');
+               console.log('Edge function should inject nonces into all scripts');
                console.log('Check for CSP violations in console');
              `,
           }}
@@ -50,9 +49,9 @@ export default function Home() {
           CSP + Cloudflare Email Protection
         </h1>
         <p className="mb-6">
-          This page uses a Launch edge function to provide a dynamic nonce for
-          Cloudflare&apos;s email protection script, ensuring strict-dynamic CSP
-          compliance.
+          This page uses a Launch edge function to automatically inject nonces
+          into all script tags, including Cloudflare&apos;s email protection
+          script, ensuring strict-dynamic CSP compliance.
         </p>
 
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
@@ -60,9 +59,9 @@ export default function Home() {
             CSP Configuration Status
           </h3>
           <p className="text-yellow-700 text-sm">
-            This page uses nonce-based CSP with &apos;strict-dynamic&apos;
-            directive. Cloudflare email protection should work with this
-            configuration.
+            Launch edge function automatically injects nonces into all scripts
+            and updates CSP headers. This allows &apos;strict-dynamic&apos; to
+            work with Cloudflare email protection.
           </p>
         </div>
 
@@ -129,5 +128,3 @@ export default function Home() {
     </>
   );
 }
-
-// Static page - no server-side props needed

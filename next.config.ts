@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               `default-src 'self'`,
-              `script-src 'self' 'nonce-test123' 'strict-dynamic' https://challenges.cloudflare.com`,
+              `script-src 'self' 'nonce-test123' 'strict-dynamic' 'unsafe-inline' https://challenges.cloudflare.com`,
               `style-src 'self' 'unsafe-inline'`,
               `img-src 'self' data: https:`,
               `font-src 'self'`,
@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               `default-src 'self'`,
-              `script-src 'self' 'nonce-test123' 'strict-dynamic' https://challenges.cloudflare.com`,
+              `script-src 'self' 'nonce-test123' 'strict-dynamic' 'unsafe-inline' https://challenges.cloudflare.com`,
               `style-src 'self' 'unsafe-inline'`,
               `img-src 'self' data: https:`,
               `font-src 'self'`,

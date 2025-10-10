@@ -61,15 +61,16 @@ export default function SolutionPage() {
             ✅ WORKING CSP Configuration
           </h3>
           <p className="text-green-700 text-sm mb-2">
-            The key fix: Use proper CSP configuration with Cloudflare domains:
+            The key fix: Use proper CSP configuration with Cloudflare domains
+            and unsafe-inline:
           </p>
           <code className="text-xs bg-green-100 p-2 block rounded">
-            {`script-src 'self' 'strict-dynamic' https://challenges.cloudflare.com`}
+            {`script-src 'self' 'nonce-test123' 'strict-dynamic' 'unsafe-inline' https://challenges.cloudflare.com`}
           </code>
           <p className="text-green-700 text-sm mt-2">
             <strong>Why this works:</strong> Adding{" "}
-            <code>https://challenges.cloudflare.com</code> allows
-            Cloudflare&apos;s email protection scripts to load properly with
+            <code>&apos;unsafe-inline&apos;</code> allows Cloudflare&apos;s
+            email protection scripts to load properly with
             &apos;strict-dynamic&apos;.
           </p>
         </div>
@@ -117,13 +118,13 @@ export default function SolutionPage() {
               <strong>Fixed CSP (WORKING):</strong>
             </p>
             <code className="bg-green-100 p-2 block rounded text-xs">
-              {`script-src 'self' 'strict-dynamic' https://challenges.cloudflare.com`}
+              {`script-src 'self' 'nonce-test123' 'strict-dynamic' 'unsafe-inline' https://challenges.cloudflare.com`}
             </code>
 
             <p>
-              <strong>Change:</strong> Use proper CSP with{" "}
-              <code>https://challenges.cloudflare.com</code> instead of relying
-              on nonce-based approach
+              <strong>Change:</strong> Add{" "}
+              <code>&apos;unsafe-inline&apos;</code> to allow Cloudflare scripts
+              to work with &apos;strict-dynamic&apos;
             </p>
           </div>
         </div>

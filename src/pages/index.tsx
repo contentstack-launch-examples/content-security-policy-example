@@ -50,7 +50,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* External Script that will be blocked by CSP */}
+      {/* External Script */}
       <Script
         src="https://cdn-cgi.com/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
         strategy="afterInteractive"

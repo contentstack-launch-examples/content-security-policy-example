@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import Script from "next/script";
 
 export default function Home() {
   return (
@@ -9,12 +10,6 @@ export default function Home() {
         <meta
           name="description"
           content="CSP with Cloudflare Email Protection"
-        />
-
-        {/* Cloudflare Email Protection Script */}
-        <script
-          src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
-          async
         />
       </Head>
 
@@ -54,6 +49,12 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Cloudflare Email Protection Script */}
+      <Script
+        src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
+        strategy="afterInteractive"
+      />
     </>
   );
 }

@@ -52,7 +52,7 @@ export default function SolutionPage() {
 
       {/* External Script that will be blocked by CSP */}
       <Script
-        src="https://cdn-cgi.com/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
+        src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
         strategy="afterInteractive"
       />
 

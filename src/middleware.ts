@@ -7,10 +7,10 @@ export function middleware(request: NextRequest) {
     ""
   );
 
-  // Create the CSP header with nonce and strict-dynamic
+  // Create the CSP header with nonce and strict-dynamic (more restrictive)
   const cspHeader = [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://cdn-cgi.com`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob:",
     "font-src 'self'",
@@ -37,5 +37,3 @@ export function middleware(request: NextRequest) {
 
   return response;
 }
-
-// No config needed - middleware applies to all routes by default

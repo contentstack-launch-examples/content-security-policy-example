@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createHash } from "crypto";
 
 export function middleware(request: NextRequest) {
-  // Generate a unique nonce for this request
-  const nonce = createHash("sha256")
-    .update(Math.random().toString() + Date.now().toString())
-    .digest("base64");
+  // Generate a unique nonce for this request using Web Crypto API
+  const nonce = btoa(Math.random().toString() + Date.now().toString()).replace(
+    /[^a-zA-Z0-9]/g,
+    ""
+  );
 
   // Create the CSP header with nonce and strict-dynamic
   const cspHeader = [

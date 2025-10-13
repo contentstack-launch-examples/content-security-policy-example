@@ -10,8 +10,19 @@ export default async function handler(request, context) {
 
     let html = await response.text();
 
-    // Get nonce from request headers (set by middleware)
-    const nonce = request.headers.get("x-nonce");
+    // Extract nonce from CSP header (set by middleware)
+    const cspHeader = response.headers.get("Content-Security-Policy") || "";
+    const nonceMatch = cspHeader.match(/'nonce-([^']+)'/);
+    const nonce = nonceMatch ? nonceMatch[1] : null;
+
+    // If no nonce found, return original response
+    if (!nonce) {
+      return new Response(html, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+      });
+    }
 
     // Add nonce to scripts
     html = html.replace(/<script(?!.*nonce=)/g, `<script nonce="${nonce}"`);
@@ -48,18 +59,16 @@ export default async function handler(request, context) {
     // Insert handler
     html = html.replace("</head>", dynamicScriptHandler + "</head>");
 
-    // Update CSP
+    // Update CSP - ensure the nonce is properly formatted
     const originalCSP = response.headers.get("Content-Security-Policy") || "";
     let updatedCSP = originalCSP;
 
-    if (/script-src/.test(originalCSP)) {
-      updatedCSP = originalCSP.replace(
-        /script-src([^;]*)/,
-        (match, p1) => `script-src${p1} 'nonce-${nonce}' 'strict-dynamic'`
-      );
-    } else {
-      updatedCSP += `; script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`;
-    }
+    // Remove any 'nonce-null' entries and ensure proper nonce is present
+    updatedCSP = updatedCSP.replace(/'nonce-null'/g, "");
+    updatedCSP = updatedCSP.replace(/'nonce-[^']*'/g, `'nonce-${nonce}'`);
+
+    // Clean up any double spaces or semicolons
+    updatedCSP = updatedCSP.replace(/\s+/g, " ").replace(/;\s*;/g, ";").trim();
 
     // Return response
     const newHeaders = new Headers(response.headers);

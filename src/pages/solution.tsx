@@ -50,9 +50,9 @@ export default function SolutionPage() {
         </div>
       </div>
 
-      {/* Cloudflare Email Protection Script */}
+      {/* External Script that will be blocked by CSP */}
       <Script
-        src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
+        src="https://cdn-cgi.com/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
         strategy="afterInteractive"
       />
 

@@ -7,10 +7,10 @@ export function middleware(request: NextRequest) {
     ""
   );
 
-  // Create the CSP header with nonce and strict-dynamic (more restrictive)
+  // Create the CSP header with nonce and strict-dynamic (matching Bibby Finance format exactly)
   const cspHeader = [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    `script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-${nonce}'`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob:",
     "font-src 'self'",

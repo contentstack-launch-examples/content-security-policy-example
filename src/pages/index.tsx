@@ -1,8 +1,13 @@
 import Head from "next/head";
 import Link from "next/link";
 import Script from "next/script";
+import { GetServerSideProps } from "next";
 
-export default function Home() {
+interface HomeProps {
+  nonce: string;
+}
+
+export default function Home({ nonce }: HomeProps) {
   return (
     <>
       <Head>
@@ -50,11 +55,21 @@ export default function Home() {
         </div>
       </div>
 
-      {/* External Script */}
+      {/* External Script - This will be blocked by CSP with strict-dynamic */}
       <Script
-        src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
+        src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
         strategy="afterInteractive"
       />
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const nonce = context.req.headers["x-nonce"] as string;
+
+  return {
+    props: {
+      nonce: nonce || "",
+    },
+  };
+};

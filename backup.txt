@@ -10,10 +10,19 @@ export default async function handler(request, context) {
 
     let html = await response.text();
 
-    // Generate nonce
-    const nonce = Array.from(crypto.getRandomValues(new Uint8Array(16)))
-      .map((byte) => byte.toString(16).padStart(2, "0"))
-      .join("");
+    // Extract nonce from CSP header
+    const cspHeader = response.headers.get("Content-Security-Policy") || "";
+    const nonceMatch = cspHeader.match(/'nonce-([^']+)'/);
+    const nonce = nonceMatch ? nonceMatch[1] : null;
+
+    // If no nonce found, return original response
+    if (!nonce) {
+      return new Response(html, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+      });
+    }
 
     // Add nonce to scripts
     html = html.replace(/<script(?!.*nonce=)/g, `<script nonce="${nonce}"`);
@@ -54,14 +63,11 @@ export default async function handler(request, context) {
     const originalCSP = response.headers.get("Content-Security-Policy") || "";
     let updatedCSP = originalCSP;
 
-    if (/script-src/.test(originalCSP)) {
-      updatedCSP = originalCSP.replace(
-        /script-src([^;]*)/,
-        (match, p1) => `script-src${p1} 'nonce-${nonce}' 'strict-dynamic'`
-      );
-    } else {
-      updatedCSP += `; script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`;
-    }
+    updatedCSP = updatedCSP.replace(/'nonce-null'/g, "");
+    updatedCSP = updatedCSP.replace(/'nonce-[^']*'/g, `'nonce-${nonce}'`);
+
+    // Clean up any double spaces or semicolons
+    updatedCSP = updatedCSP.replace(/\s+/g, " ").replace(/;\s*;/g, ";").trim();
 
     // Return response
     const newHeaders = new Headers(response.headers);
@@ -77,3 +83,44 @@ export default async function handler(request, context) {
     return fetch(request);
   }
 }
+
+//middleware
+import { NextRequest, NextResponse } from "next/server";
+
+export function middleware(request: NextRequest) {
+  // Generate nonce using Web Crypto API
+  const nonce = btoa(Math.random().toString() + Date.now().toString()).replace(
+    /[^a-zA-Z0-9]/g,
+    ""
+  );
+
+  // CSP header 
+  const cspHeader = [
+    "default-src 'self'",
+    `script-src-elem 'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-${nonce}'`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "font-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "frame-ancestors 'none'",
+    "upgrade-insecure-requests",
+  ].join("; ");
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+
+  // Create the response
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
+  // Add the CSP header to the response
+  response.headers.set("Content-Security-Policy", cspHeader);
+
+  return response;
+}
+

@@ -50,9 +50,9 @@ export default function SolutionPage() {
         </div>
       </div>
 
-      {/* External Script that will be blocked by CSP */}
+      {/* External Script - Next.js Script component automatically adds nonce */}
       <Script
-        src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/email-decode.min.js"
+        src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
         strategy="afterInteractive"
       />
 
@@ -60,8 +60,8 @@ export default function SolutionPage() {
       <Script id="debug-script" strategy="afterInteractive">
         {`
           console.log('SOLUTION: CSP Configuration Test');
-          console.log('This CSP allows Cloudflare email protection scripts');
-          console.log('Email protection should work properly');
+          console.log('Next.js Script component automatically adds nonce');
+          console.log('Cloudflare email protection script should load successfully');
         `}
       </Script>
     </>

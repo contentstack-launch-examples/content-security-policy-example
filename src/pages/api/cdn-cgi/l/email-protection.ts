@@ -13,7 +13,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         bytes.push(parseInt(hash.substr(i, 2), 16));
       }
       decodedEmail = String.fromCharCode(...bytes);
-    } catch (e) {
+    } catch {
       decodedEmail = "mocked@example.com";
     }
   } else {

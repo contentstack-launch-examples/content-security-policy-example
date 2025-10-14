@@ -1,8 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
-import Script from "next/script";
 import { GetServerSideProps } from "next";
 
+/* eslint-disable @next/next/no-html-link-for-pages */
 export default function Home() {
   return (
     <>
@@ -52,7 +52,10 @@ export default function Home() {
       </div>
 
       {/* External Script - This will be blocked by CSP with strict-dynamic */}
-      <script src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+      <script
+        src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+        async
+      ></script>
     </>
   );
 }

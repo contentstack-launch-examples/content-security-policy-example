@@ -1,18 +1,20 @@
-import { Html, Head, Main, NextScript } from "next/document";
-import { GetServerSidePropsContext } from "next";
+import Document, { Html, Head, Main, NextScript } from "next/document";
 
-interface DocumentProps {
-  nonce?: string;
+class MyDocument extends Document {
+  render() {
+    // Static nonce for CSP
+    const staticNonce = "static-nonce-12345";
+
+    return (
+      <Html lang="en">
+        <Head nonce={staticNonce} />
+        <body className="antialiased">
+          <Main />
+          <NextScript nonce={staticNonce} />
+        </body>
+      </Html>
+    );
+  }
 }
 
-export default function Document({ nonce }: DocumentProps) {
-  return (
-    <Html lang="en">
-      <Head />
-      <body className="antialiased">
-        <Main />
-        <NextScript nonce={nonce} />
-      </body>
-    </Html>
-  );
-}
+export default MyDocument;

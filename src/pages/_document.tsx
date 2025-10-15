@@ -1,13 +1,26 @@
-import Document, { Html, Head, Main, NextScript, DocumentContext } from "next/document";
+import Document, {
+  Html,
+  Head,
+  Main,
+  NextScript,
+  DocumentContext,
+  DocumentInitialProps,
+} from "next/document";
 import crypto from "crypto";
 
-class MyDocument extends Document {
+interface MyDocumentProps extends DocumentInitialProps {
+  nonce: string;
+}
+
+class MyDocument extends Document<MyDocumentProps> {
   static async getInitialProps(ctx: DocumentContext) {
     const initialProps = await Document.getInitialProps(ctx);
-    
+
     // Get nonce from middleware (set in request headers)
-    const nonce = ctx.req?.headers['x-nonce'] as string || crypto.randomBytes(16).toString('base64');
-    
+    const nonce =
+      (ctx.req?.headers["x-nonce"] as string) ||
+      crypto.randomBytes(16).toString("base64");
+
     return {
       ...initialProps,
       nonce,
@@ -15,7 +28,7 @@ class MyDocument extends Document {
   }
 
   render() {
-    const { nonce } = this.props as any;
+    const { nonce } = this.props;
 
     return (
       <Html lang="en">

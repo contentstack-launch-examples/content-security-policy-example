@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
 
 export function middleware(request: NextRequest) {
-  // Generate unique nonce for this request
-  const nonce = crypto.randomBytes(16).toString("base64");
+  // Generate unique nonce for this request using Web Crypto API
+  const nonce = btoa(
+    String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16)))
+  );
 
   // Create CSP with dynamic nonce
   const csp = [

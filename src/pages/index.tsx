@@ -2,7 +2,6 @@ import Head from "next/head";
 import Link from "next/link";
 import { GetServerSideProps } from "next";
 
-/* eslint-disable @next/next/no-html-link-for-pages */
 export default function Home() {
   return (
     <>
@@ -27,7 +26,7 @@ export default function Home() {
             <a
               href="/api/cdn-cgi/l/email-protection?hash=b9d6d8d5d0d7d8f9d6d8d5d0d7d897dad6d4"
               className="block w-full bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-colors text-center"
-              data-cfemail="b9d6d8d5d0d7d8f9d6d8d5d0d7d897dad6d4"
+              data-cfemail="reetikachavan02@gmail.com"
             >
               Support Email
             </a>
@@ -51,7 +50,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* External Script - This will be blocked by CSP with strict-dynamic */}
+      {/* External Script */}
       <script
         src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
         async

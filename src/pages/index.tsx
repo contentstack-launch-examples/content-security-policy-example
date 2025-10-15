@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import Script from "next/script";
 import { GetServerSideProps } from "next";
 
 export default function Home() {
@@ -50,12 +51,11 @@ export default function Home() {
         </div>
       </div>
 
-      {/* External Script */}
-      <script
-        nonce="static-nonce-12345"
+      {/* External Script - Next.js Script component automatically adds nonce */}
+      <Script
         src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
-        async
-      ></script>
+        strategy="afterInteractive"
+      />
     </>
   );
 }

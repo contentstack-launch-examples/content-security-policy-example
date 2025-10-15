@@ -24,8 +24,8 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next();
   response.headers.set("Content-Security-Policy", csp);
 
-  // Store nonce in request headers for _document.tsx to use
-  request.headers.set("x-nonce", nonce);
+  // Store nonce in response headers for _document.tsx to use
+  response.headers.set("x-nonce", nonce);
 
   return response;
 }

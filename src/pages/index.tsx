@@ -53,6 +53,7 @@ export default function Home() {
 
       {/* External Script - Next.js Script component automatically adds nonce */}
       <Script
+        id="cloudflare-email-decode"
         src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
         strategy="afterInteractive"
       />

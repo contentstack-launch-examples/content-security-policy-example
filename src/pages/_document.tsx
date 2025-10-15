@@ -16,9 +16,9 @@ class MyDocument extends Document<MyDocumentProps> {
   static async getInitialProps(ctx: DocumentContext) {
     const initialProps = await Document.getInitialProps(ctx);
 
-    // Get nonce from middleware (set in request headers)
+    // Get nonce from middleware (set in response headers)
     const nonce =
-      (ctx.req?.headers["x-nonce"] as string) ||
+      (ctx.res?.getHeader("x-nonce") as string) ||
       crypto.randomBytes(16).toString("base64");
 
     return {

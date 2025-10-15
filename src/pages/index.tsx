@@ -17,29 +17,23 @@ export default function Home() {
         <div className="max-w-2xl mx-auto">
           <div className="space-y-4">
             <a
-              href="/api/cdn-cgi/l/email-protection?hash=a8c7c9c4c1c6c9e8c7c9c4c1c6c986cbc7c5"
+              href="/cdn-cgi/l/email-protection#press@example.com"
               className="block w-full bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors text-center"
-              data-cfemail="a8c7c9c4c1c6c9e8c7c9c4c1c6c986cbc7c5"
-              target="_blank"
-              rel="noopener noreferrer"
+              data-cfemail="press@example.com"
             >
               Contact our press office
             </a>
             <a
-              href="/api/cdn-cgi/l/email-protection?hash=b9d6d8d5d0d7d8f9d6d8d5d0d7d897dad6d4"
+              href="/cdn-cgi/l/email-protection#reetika.chavan@example.com"
               className="block w-full bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-colors text-center"
-              data-cfemail="reetikachavan02@gmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
+              data-cfemail="reetika.chavan@example.com"
             >
               Support Email
             </a>
             <a
-              href="/api/cdn-cgi/l/email-protection?hash=cae5ebe6e3e4ebcae5ebe6e3e4eba6ebe7e5"
+              href="/cdn-cgi/l/email-protection#info@example.com"
               className="block w-full bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg transition-colors text-center"
-              data-cfemail="cae5ebe6e3e4ebcae5ebe6e3e4eba6ebe7e5"
-              target="_blank"
-              rel="noopener noreferrer"
+              data-cfemail="info@example.com"
             >
               General Information
             </a>

@@ -19,21 +19,21 @@ export default function Home() {
             <a
               href="/cdn-cgi/l/email-protection#press@example.com"
               className="block w-full bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors text-center"
-              data-cfemail="press@example.com"
+              data-cfemail="7072657373406578616d706c652e636f6d"
             >
               Contact our press office
             </a>
             <a
               href="/cdn-cgi/l/email-protection#reetika.chavan@example.com"
               className="block w-full bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg transition-colors text-center"
-              data-cfemail="reetika.chavan@example.com"
+              data-cfemail="72656574696b612e63686176616e406578616d706c652e636f6d"
             >
               Support Email
             </a>
             <a
               href="/cdn-cgi/l/email-protection#info@example.com"
               className="block w-full bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg transition-colors text-center"
-              data-cfemail="info@example.com"
+              data-cfemail="696e666f406578616d706c652e636f6d"
             >
               General Information
             </a>

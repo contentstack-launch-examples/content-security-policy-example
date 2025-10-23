@@ -1,31 +1,61 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
-  // Generate unique nonce for this request using Web Crypto API
-  const nonce = btoa(
+// Generate nonce function similar to customer's implementation
+async function generateNonce(): Promise<string> {
+  return btoa(
     String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16)))
   );
+}
 
-  // Create CSP with dynamic nonce
-  const csp = [
-    "default-src 'self'",
-    `script-src-elem 'self' 'unsafe-inline' 'strict-dynamic' 'unsafe-eval' 'nonce-${nonce}'`,
-    "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' blob: data:",
-    "font-src 'self'",
-    "object-src 'none'",
-    "base-uri 'self'",
-    "form-action 'self'",
-    "frame-ancestors 'none'",
-    "upgrade-insecure-requests",
-  ].join("; ");
+async function setSecurityHeaders(response: NextResponse): Promise<void> {
+  const nonce = await generateNonce();
 
-  // Set CSP header with dynamic nonce
+  // CSP directives exactly like customer's implementation
+  const cspDirectives = {
+    "default-src": "'self'",
+    "script-src": `'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-${nonce}'`,
+    "script-src-elem": `'self' 'unsafe-inline' 'strict-dynamic' https: http: 'nonce-${nonce}'`,
+    "style-src": "'self' 'unsafe-inline' https:",
+    "img-src": "'self' blob: data: https:",
+    "font-src": "'self' data: https:",
+    "connect-src": "'self' https: http:",
+    "frame-src": "'self' https://www.youtube.com/ https://player.vimeo.com",
+    "frame-ancestors": "'self'",
+    "object-src": "'none'",
+    "base-uri": "'self'",
+    "form-action": "'self'",
+    "upgrade-insecure-requests": "",
+  };
+
+  // Build CSP header
+  const cspHeader = Object.entries(cspDirectives)
+    .map(([key, value]) => (value ? `${key} ${value}` : key))
+    .join(";")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  // Security headers similar to customer's implementation
+  const securityHeaders = {
+    "Content-Security-Policy": cspHeader,
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Nonce": nonce, // Pass nonce to the app
+    "Permissions-Policy":
+      "camera=(), microphone=(), geolocation=(), autoplay=*, fullscreen=*",
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+  };
+
+  // Apply headers
+  Object.entries(securityHeaders).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
+}
+
+export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
-  response.headers.set("Content-Security-Policy", csp);
 
-  // Store nonce in response headers for _document.tsx to use
-  response.headers.set("x-nonce", nonce);
+  // Set comprehensive security headers
+  await setSecurityHeaders(response);
 
   return response;
 }

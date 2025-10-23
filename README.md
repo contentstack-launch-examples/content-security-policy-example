@@ -11,8 +11,6 @@ This example addresses a common issue where strict CSP policies block Cloudflare
 │   ├── pages/
 │   │   ├── index.tsx          # Working example with proper CSP
 │   ├── middleware.ts         # CSP header generation and nonce handling
-├── functions/
-│   └── [proxy].edge.js       # Edge function for nonce injection
 ├── next.config.ts            # Next.js configuration
 ├── package.json              # Dependencies and scripts
 └── tsconfig.json            # TypeScript configuration
@@ -23,19 +21,13 @@ This example addresses a common issue where strict CSP policies block Cloudflare
 | File                        | Purpose                                                |
 | --------------------------- | ------------------------------------------------------ |
 | `src/middleware.ts`         | Generates dynamic nonces and sets CSP headers          |
-| `functions/[proxy].edge.js` | Edge function for nonce injection into dynamic scripts |
 
 ### Middleware (`src/middleware.ts`)
 
-Generates dynamic nonces using Web Crypto API and sets CSP headers for each request. The middleware creates nonce-based CSP policies that include `'strict-dynamic'` directive and handles the security headers for the application.
-
-### Edge Function (`functions/[proxy].edge.js`)
-
-Processes HTML responses to inject nonces into dynamically created scripts. It extracts nonces from CSP headers and ensures all script elements have proper nonce attributes, enabling them to execute under strict CSP policies.
+Generates dynamic nonces and sets comprehensive CSP headers with external resource support (https: http:). Includes additional security headers and uses template literals for proper nonce interpolation. Supports 'unsafe-inline', 'strict-dynamic', and nonce-based script execution for Next.js compatibility.
 
 ## Reference
 
 - [Cloudflare CSP Documentation](https://developers.cloudflare.com/fundamentals/reference/policies-compliances/content-security-policies/)
 - [Cloudflare CSP Documentation](https://developers.cloudflare.com/turnstile/reference/content-security-policy/)
 - [Next.js CSP Implementation](https://nextjs.org/docs/app/guides/content-security-policy)
-- [Launch's Edge Function](https://www.contentstack.com/docs/developers/launch/edge-functions)

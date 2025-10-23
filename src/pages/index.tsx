@@ -51,7 +51,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* External Script - Next.js Script component automatically adds nonce */}
       <Script
         id="cloudflare-email-decode"
         src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
@@ -62,7 +61,6 @@ export default function Home() {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  // Force dynamic rendering
   return {
     props: {},
   };

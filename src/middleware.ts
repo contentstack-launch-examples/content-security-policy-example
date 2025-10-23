@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Generate nonce function similar to customer's implementation
+// Generate nonce
 async function generateNonce(): Promise<string> {
   return btoa(
     String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16)))
@@ -10,7 +10,6 @@ async function generateNonce(): Promise<string> {
 async function setSecurityHeaders(response: NextResponse): Promise<void> {
   const nonce = await generateNonce();
 
-  // CSP directives exactly like customer's implementation
   const cspDirectives = {
     "default-src": "'self'",
     "script-src": `'unsafe-inline' 'strict-dynamic' https: http: 'unsafe-eval' 'nonce-${nonce}'`,
@@ -34,12 +33,12 @@ async function setSecurityHeaders(response: NextResponse): Promise<void> {
     .replace(/\s+/g, " ")
     .trim();
 
-  // Security headers similar to customer's implementation
+  // Security headers
   const securityHeaders = {
     "Content-Security-Policy": cspHeader,
     "X-Content-Type-Options": "nosniff",
     "Referrer-Policy": "strict-origin-when-cross-origin",
-    "X-Nonce": nonce, // Pass nonce to the app
+    "X-Nonce": nonce, 
     "Permissions-Policy":
       "camera=(), microphone=(), geolocation=(), autoplay=*, fullscreen=*",
     "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
@@ -62,13 +61,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
     "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
